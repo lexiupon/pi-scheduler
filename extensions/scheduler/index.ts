@@ -17,7 +17,9 @@ const SCOPES = ["session", "cwd", "global"] as const;
 const WAKE_ON = ["always", "failure", "success", "never"] as const;
 const MANAGE_ACTIONS = ["enable", "disable", "remove", "update", "cleanup"] as const;
 
-const STATE_FILE = join(homedir(), ".pi", "agent", "state", "scheduler", "tasks.json");
+// Tests can supply an isolated scheduler state file before the extension loads.
+// Keep the production default compatible with existing scheduler installations.
+const STATE_FILE = process.env.PI_SCHEDULER_STATE_FILE || join(homedir(), ".pi", "agent", "state", "scheduler", "tasks.json");
 const MAX_TIMER_DELAY_MS = 2_147_483_647; // setTimeout's practical max (~24.8 days)
 const DEFAULT_SHELL_TIMEOUT_MS = 5 * 60 * 1000;
 const MAX_STORED_OUTPUT_CHARS = 12_000;
