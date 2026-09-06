@@ -43,25 +43,12 @@ type Harness = {
 };
 
 const extensionUrl = new URL("../extensions/scheduler/index.ts", import.meta.url);
-const STATE_FILE = join(process.env.HOME ?? "", ".pi", "agent", "state", "scheduler", "tasks.json");
-const BACKUP_STATE_FILE = `${STATE_FILE}.context-regression-backup-${process.pid}`;
 const testHome = await mkdtemp(join(tmpdir(), "pi-scheduler-extension-test-"));
+const STATE_FILE = join(testHome, "tasks.json");
+process.env.PI_SCHEDULER_STATE_FILE = STATE_FILE;
 
-let savedState: string | undefined;
-try {
-	savedState = await Bun.file(STATE_FILE).text();
-} catch {
-	// No preexisting user scheduler state.
-}
-
-/**
- * node:os homedir is immutable after process start, so write directly to the extension's
- * real state path and restore it after this serial test file instead of changing HOME.
- */
 afterAll(async () => {
-	if (savedState === undefined) await rm(STATE_FILE, { force: true });
-	else await writeFile(STATE_FILE, savedState, "utf8");
-	await rm(BACKUP_STATE_FILE, { force: true });
+	delete process.env.PI_SCHEDULER_STATE_FILE;
 	await rm(testHome, { recursive: true, force: true });
 });
 
@@ -172,6 +159,7 @@ async function withHarness(
  * Pi invokes session_start and each command/tool handler with distinct ExtensionContext
  * objects. Every mutation that changes the pending schedule must therefore re-arm using
  * the stored session context, rather than silently returning at isSessionActive().
+ * PI_SCHEDULER_STATE_FILE isolates this suite from the user's real scheduler state.
  */
 test.serial("tool task creation re-arms the active session when its context differs", async () => {
 	await withHarness([pendingTask("existing")], 1, async ({ tools, handlerCtx, timers, clearedTimers }) => {
