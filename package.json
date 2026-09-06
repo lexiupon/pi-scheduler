@@ -31,7 +31,7 @@
     "LICENSE.md"
   ],
   "scripts": {
-    "test": "node --test test/*.test.cjs",
+    "test": "bun test --max-concurrency=1",
     "pack:dry-run": "npm pack --dry-run"
   },
   "publishConfig": {

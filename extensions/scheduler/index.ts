@@ -251,6 +251,15 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 		updateStatus(ctx);
 	}
 
+	/**
+	 * Pi creates a fresh ExtensionContext for every tool and command invocation.
+	 * Timer ownership belongs to the context captured at session_start, which is
+	 * also the only context accepted by isSessionActive().
+	 */
+	function rescheduleActiveSession(): void {
+		if (activeCtx) rescheduleAll(activeCtx, sessionGeneration);
+	}
+
 	async function catchUpOverdueCronTasks(
 		ctx: ExtensionContext,
 		generation: number,
@@ -414,7 +423,7 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 		);
 		tasks.push(task);
 		await saveTasks();
-		rescheduleAll(ctx);
+		rescheduleActiveSession();
 		return task;
 	}
 
@@ -450,7 +459,7 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 		const visible = visibleTasks(ctx);
 		const task = mutator(visible);
 		await saveTasks();
-		rescheduleAll(ctx);
+		rescheduleActiveSession();
 		return task;
 	}
 
@@ -601,7 +610,7 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 				const removed = core.removeScheduledTask(tasks, visibleRemoved.id);
 				clearHandle(removed.id);
 				await saveTasks();
-				rescheduleAll(ctx);
+				rescheduleActiveSession();
 				ctx.ui.notify(`Removed scheduled task ${removed.id}`, "info");
 			} catch (error: any) {
 				ctx.ui.notify(error?.message ?? String(error), "error");
@@ -615,7 +624,7 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 			await loadTasks();
 			const removed = cleanupVisibleTasks(ctx);
 			await saveTasks();
-			rescheduleAll(ctx);
+			rescheduleActiveSession();
 			ctx.ui.notify(`Cleaned up ${removed.length} scheduled task(s)`, "info");
 		},
 	});
@@ -776,7 +785,7 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 			if (params.action === "cleanup") {
 				const removed = cleanupVisibleTasks(ctx);
 				await saveTasks();
-				rescheduleAll(ctx);
+				rescheduleActiveSession();
 				return { content: [{ type: "text", text: `Cleaned up ${removed.length} scheduled task(s).` }], details: { removed } };
 			}
 
@@ -806,7 +815,7 @@ export default function schedulerExtension(pi: ExtensionAPI) {
 			}
 
 			await saveTasks();
-			rescheduleAll(ctx);
+			rescheduleActiveSession();
 			return {
 				content: [{ type: "text", text: `${params.action} scheduled task ${task.id}` }],
 				details: { task, pending: core.pendingTasks(tasks) },
