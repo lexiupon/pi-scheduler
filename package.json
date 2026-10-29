@@ -1,16 +1,19 @@
 {
-  "name": "@alexion42/pi-scheduler",
-  "version": "0.3.1",
-  "description": "Give Pi coding agents a clock: schedule reminders, shell commands, and self-waking prompts for CI polling and autonomous follow-ups.",
+  "name": "@lexiupon/pi-scheduler",
+  "version": "0.4.0",
+  "description": "Give Pi coding agents a clock: schedule reminders, shell commands, and self-waking prompts for CI polling and autonomous follow-ups. Fork of jl1990/pi-scheduler.",
   "author": "jl1990",
+  "contributors": [
+    "Alexion Fortytwo <alexion@lexiupon.com>"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jl1990/pi-scheduler.git"
+    "url": "git+https://github.com/lexiupon/pi-scheduler.git"
   },
-  "homepage": "https://github.com/jl1990/pi-scheduler#readme",
+  "homepage": "https://github.com/lexiupon/pi-scheduler#readme",
   "bugs": {
-    "url": "https://github.com/jl1990/pi-scheduler/issues"
+    "url": "https://github.com/lexiupon/pi-scheduler/issues"
   },
   "keywords": [
     "pi-package",
@@ -28,7 +31,9 @@
   "files": [
     "extensions/**/*",
     "README.md",
-    "LICENSE.md"
+    "LICENSE.md",
+    "CHANGELOG.md",
+    "UPSTREAM"
   ],
   "scripts": {
     "test": "bun test --max-concurrency=1",

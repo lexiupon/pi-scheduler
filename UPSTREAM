@@ -1,0 +1,18 @@
+# Upstream
+
+Fork of [jl1990/pi-scheduler](https://github.com/jl1990/pi-scheduler) (MIT, © jl1990), taken at
+upstream tag **v0.3.0** = commit `d5e6bc5089c46c4c65f1d72e30e223bf43bec454` ("Add safe cron
+catch-up on startup", 2026-08-26). Upstream history is **preserved through that commit**, so a
+future merge from upstream still has a merge base.
+
+Everything above that commit is ours:
+
+- `test/scheduler-extension.test.ts` — new: context re-arm regression + lifecycle-state isolation
+- `extensions/scheduler/index.ts` — re-arm the scheduler through the active session context
+- `.github/workflows/test.yml`, `.github/workflows/publish-npm.yml`, `bun.lock` — our CI and lockfile
+- `package.json`, `README.md`, `CHANGELOG.md` — scope, name, install docs
+
+`LICENSE.md` is jl1990's MIT license, unmodified, and `author` credits him; this fork's work is
+recorded in `contributors`.
+
+Upstream has since moved on to v0.5.1; porting those changes is a separate activity.

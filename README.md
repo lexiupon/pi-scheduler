@@ -2,6 +2,9 @@
 
 **Scheduled actions for Pi agents: reminders, self-waking prompts, recurring shell commands, and command-output follow-ups.**
 
+Fork of [jl1990/pi-scheduler](https://github.com/jl1990/pi-scheduler) (MIT) — upstream history is
+preserved through v0.3.0; what's ours is listed in [UPSTREAM](UPSTREAM).
+
 Pi Scheduler is a [Pi](https://github.com/earendil-works/pi) extension that lets an agent schedule future work from inside the conversation. It focuses on **scheduled actions**, not just prompts: the agent can wake itself later, run shell commands directly, capture stdout/stderr, and decide what to do next.
 
 ## Why?
@@ -34,13 +37,13 @@ Without scheduling, the agent has to stop and hope you come back. With Pi Schedu
 Install from npm:
 
 ```bash
-pi install npm:@jl1990/pi-scheduler
+pi install npm:@lexiupon/pi-scheduler
 ```
 
 Or install directly from GitHub:
 
 ```bash
-pi install git:git@github.com:jl1990/pi-scheduler.git
+pi install git:git@github.com:lexiupon/pi-scheduler.git
 ```
 
 Then restart Pi, or run:
